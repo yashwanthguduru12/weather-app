@@ -1,0 +1,78 @@
+<html>
+<head>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body id="body">
+    <h1 id="title">Weather of City</h1>
+    <input type="text" id="search_bar" placeholder="Enter city name" value=""> <button id="search_button"
+        onclick="weather()">search</button>
+    <br>
+    <br>
+    <div id="wall">
+        <div id="details">
+            <label id="name"></label>
+            <label id="country"></label>
+            <label id="temp1"></label>
+            <br>
+            <br>
+            <br>
+            <label id="pressure"></label>
+            <label id="description"></label>
+        </div>
+    </div>
+</body>
+<script>
+    let wall = document.getElementById("wall");
+    let details = document.getElementById("details");
+    let temp1 = document.getElementById("temp1");
+    let pressure = document.getElementById("pressure");
+    let name1 = document.getElementById("name");
+    let country = document.getElementById("country");
+    let description = document.getElementById("description");
+    let key = 'c0be6c0df6d818eac19badd6a7978ec7';
+    async function weather() {
+        let input = document.getElementById("search_bar").value;;
+        let url = `https://api.openweathermap.org/data/2.5/weather?q=${input}&appid=${key}`;
+        let weather = await fetch(url);
+        let cityweather = await weather.json();
+        console.log(cityweather)
+        display(cityweather)
+    }
+    function display(list) {
+        wall.innerText = ' ';
+        let div = document.createElement("div");
+        div.setAttribute("id", "main_div")
+        let temp = document.createElement('p');
+        temp.setAttribute("id", "temp");
+        temp = list.main.temp;
+        temp = Math.round(temp - 273)
+        let image = document.createElement("img");
+        image.setAttribute("class", "image1")
+        if (temp < 30 && temp >= 20) {
+            image.src = 'windy.png'
+        }
+        else if (temp > 30 && temp <= 40) {
+            image.src = 'suuny2.png'
+        }   
+        else if (temp < 20) {
+            image.src = "snow.png"
+        }
+        else {
+            image.src = 'sun.png'
+        }
+
+        temp1.innerText = "Temrature:  " + "   " + temp + " " + " *C";
+        name1.innerText = " City:" + "   " + list.name;
+        country.innerText = "Country:" + " " + list.sys.country;
+        pressure.innerText = "WindSpeed:" + list.wind.speed + "K/m";
+        list.weather.forEach(function (list1) {
+            description.innerText = "Description: " + list1.description
+        })
+        div.append(image, details);
+        wall.append(div);
+
+    }
+
+</script>
+
+</html>
